@@ -49,21 +49,23 @@ HashMap * createMap(long capacity) {
 }
 
 void insertMap(HashMap * map, char * key, void * value) {
+    // Si se va a insertar un nuevo elemento, verificamos si causaría un load factor >= 0.7
+    if ((float)(map->size + 1) / map->capacity >= 0.7) {
+        enlarge(map);
+    }
+
     long index = hash(key, map->capacity);
     long start = index;
 
     while (map->buckets[index] != NULL && map->buckets[index]->key != NULL) {
-        if (is_equal(map->buckets[index]->key, key)) return; // No duplicar
+        if (is_equal(map->buckets[index]->key, key)) return; // Ya existe
         index = (index + 1) % map->capacity;
-        if (index == start) return; // Loop completo
+        if (index == start) return; // Evita loop infinito
     }
 
     map->buckets[index] = createPair(key, value);
     map->size++;
     map->current = index;
-
-    if ((float)map->size / map->capacity >= 0.7)
-        enlarge(map);
 }
 
 void enlarge(HashMap * map) {
