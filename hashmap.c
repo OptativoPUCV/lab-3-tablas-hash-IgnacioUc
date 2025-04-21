@@ -50,7 +50,7 @@ HashMap * createMap(long capacity) {
 
 void insertMap(HashMap * map, char * key, void * value) {
     // Si se va a insertar un nuevo elemento, verificamos si causaría un load factor >= 0.7
-    if ((float)(map->size + 1) / map->capacity >= 0.7) {
+    if ((float)(map->size + 1) / map->capacity > 0.7) {
         enlarge(map);
     }
 
